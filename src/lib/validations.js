@@ -1,4 +1,7 @@
+
 /* eslint-disable import/no-cycle */
+import { onNavigate } from '../main.js';
+
 
 export const validateEmail = (inputValue) => {
   // expresion  regular
@@ -28,7 +31,7 @@ export const validatePassword = (inputPasswordValue, inputConfirmPasworValue) =>
   // Que no nos hayan dejado un campo vacío
   if (inputPasswordValue.length === 0 || inputConfirmPasworValue.length === 0) {
     // eslint-disable-next-line no-alert
-    alert('Por favor incerte una contraseña valida y su confirmacion');
+    alert('Por favor inserte una contraseña valida y su confirmacion');
     return false;
   }
   // Que ambas contraseñas coincidan
@@ -45,5 +48,6 @@ export const validatePassword = (inputPasswordValue, inputConfirmPasworValue) =>
   }
   // eslint-disable-next-line no-alert
   alert('La contraseña debe tener mínimo 8 cracteres');
+
   return false;
 };
