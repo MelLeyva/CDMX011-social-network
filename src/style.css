@@ -598,6 +598,17 @@ Wall/*=========*/
   margin: 5px;
 }
 
+.dislike {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  float: left;
+  width: 33px;
+  height: 33px;
+  padding: 5px;
+  margin: 5px;
+}
+
 .edit {
   display: flex;
   justify-content: center;

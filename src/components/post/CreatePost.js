@@ -5,11 +5,21 @@ const dbGlobal = firebase.firestore();
 let usuario = '';
 const userId = () => firebase.auth().currentUser;
 
-const toPost = (title, history, email) => dbGlobal.collection('stories').doc().set({
-  title,
-  history,
-  email,
-});
+const toPost = (title, history, email) => {
+  const saveUser = userId();
+  dbGlobal.collection('stories').doc().set({
+    title,
+    history,
+    email,
+    uid: [
+      saveUser.email,
+      saveUser.uid,
+    ],
+    likes: 0,
+  });
+};
+
+export const GetStory = (uuid) => dbGlobal.collection('stories').doc(uuid);
 
 export const CreatePost = () => {
   const divCreatePost = document.createElement('div');

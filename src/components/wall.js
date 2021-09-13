@@ -1,6 +1,7 @@
 /* eslint-disable import/no-cycle */
 import { logOutUser } from '../lib/utils.js';
 import { onNavigate } from '../main.js';
+import { UpdateLikes } from './post/utils.js';
 
 const dbGlobal = firebase.firestore();
 const userId = () => firebase.auth().currentUser;
@@ -46,8 +47,9 @@ export const wall = () => {
     if (data.length) {
       let html = '';
       data.forEach((doc) => {
+        console.log(doc);
+        const docId = doc.id;
         const post = doc.data();
-        // console.log(post);
         const templatePost = `
           <section id="container-post">
             <div class="data-user">
@@ -57,11 +59,14 @@ export const wall = () => {
               <h3 class="data-title">${post.title}</h3>
               <div class="data-history">${post.history}</div>
             </div>
-            <div class="btn-post">
-              <a href='#' class='a-like'>
-               <img class= 'like' src='./images/like.png' alt='like'>
+            <div id='${doc.id}' class="btn-post">
+              <a class='a-like'>
+                <img class= 'like' onclick='actualizaLikes("${docId}",${post.likes})' src='./images/like.png' alt='like'>
               </a>
-              <span id="score"></span>
+              <a class='a-disLike'>
+                <img class= 'dislike' src='./images/dislike.png' alt='like'>
+              </a>
+              <span id="score">${post.likes}</span>
               <span id="meAsusta">Me asusta</span>
               <a href='#' class='a-edit'>
                 <img class='edit' src='./images/edit.png' alt='edit'>
@@ -80,6 +85,12 @@ export const wall = () => {
       newPost.innerHTML = '';
     }
     container.appendChild(newPost);
+  };
+
+  const actualizaLikes = (id, likes) => {
+    console.log(`actualizaLikes id ${id}`);
+    const incLike = likes + 1;
+    UpdateLikes(id, incLike);
   };
 
   firebase.auth().onAuthStateChanged((user) => {
