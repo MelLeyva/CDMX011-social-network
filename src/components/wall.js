@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 import { logOutUser } from '../lib/utils.js';
 import { onNavigate } from '../main.js';
-import { UpdateLikes } from './post/utils.js';
+import { updatebuttons } from './post/eLikes.js';
 
 const dbGlobal = firebase.firestore();
 const userId = () => firebase.auth().currentUser;
@@ -47,9 +47,8 @@ export const wall = () => {
     if (data.length) {
       let html = '';
       data.forEach((doc) => {
-        console.log(doc);
-        const docId = doc.id;
         const post = doc.data();
+        // console.log(post);
         const templatePost = `
           <section id="container-post">
             <div class="data-user">
@@ -59,15 +58,15 @@ export const wall = () => {
               <h3 class="data-title">${post.title}</h3>
               <div class="data-history">${post.history}</div>
             </div>
-            <div id='${doc.id}' class="btn-post">
+            <div id="${doc.id}" class="btn-post">
               <a class='a-like'>
-                <img class= 'like' onclick='actualizaLikes("${docId}",${post.likes})' src='./images/like.png' alt='like'>
+                <img class= 'like' src='./images/like.png' alt='like'>
               </a>
               <a class='a-disLike'>
                 <img class= 'dislike' src='./images/dislike.png' alt='like'>
               </a>
-              <span id="score">${post.likes}</span>
-              <span id="meAsusta">Me asusta</span>
+              <span id="${`${doc.id}-likes`}" class='score'>${post.likes.length}</span>
+              <span>Me asusta</span>
               <a href='#' class='a-edit'>
                 <img class='edit' src='./images/edit.png' alt='edit'>
               </a>
@@ -85,12 +84,14 @@ export const wall = () => {
       newPost.innerHTML = '';
     }
     container.appendChild(newPost);
-  };
-
-  const actualizaLikes = (id, likes) => {
-    console.log(`actualizaLikes id ${id}`);
-    const incLike = likes + 1;
-    UpdateLikes(id, incLike);
+    /* función like */
+    // Seleccionanos todos los botones
+    const div = document.querySelectorAll('.btn-post');
+    // eslint-disable-next-line max-len
+    // Creamos un listener para cada botón, y ordenamos que cambie la clase cuando se le da clic al botón
+    div.forEach((divbtn) => {
+      updatebuttons(divbtn);
+    });
   };
 
   firebase.auth().onAuthStateChanged((user) => {

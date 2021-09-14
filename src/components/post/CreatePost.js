@@ -15,11 +15,11 @@ const toPost = (title, history, email) => {
       saveUser.email,
       saveUser.uid,
     ],
-    likes: 0,
+    likes: [],
   });
 };
 
-export const GetStory = (uuid) => dbGlobal.collection('stories').doc(uuid);
+// export const GetStory = (uuid) => dbGlobal.collection('stories').doc(uuid);
 
 export const CreatePost = () => {
   const divCreatePost = document.createElement('div');
