@@ -5,12 +5,19 @@ import { updatebuttons } from './post/eLikes.js';
 
 const dbGlobal = firebase.firestore();
 const userId = () => firebase.auth().currentUser;
+// let userEmail = '';
+// const userId = () => userEmail;
+let idPostToEdit = '';
+
+export const getIdPostToEdit = () => idPostToEdit;
+
 export const wall = () => {
   document.body.style.backgroundImage = 'url(../images/post-background.jpg)';
   const wallBody = document.querySelector('body');
   wallBody.classList.add('wall-body');
   const container = document.createElement('div');
   const crtUser = userId();
+  // console.log('current User : ' + crtUser);
   const header = `
   <header id='headerWall'>
     <nav class='navigation'>
@@ -25,7 +32,7 @@ export const wall = () => {
     <img id=imgUser src="./images/avatar.png" >
     <p id=idUser>${crtUser.email}</p>
   </div>
-    <button class= modalPost>
+    <button class='modalPost'>
       <img src='./images/outline_post_add_black_24dp.png' alt='addPost'>
       <p> 'Comparte tu historia' </p>
     </button>
@@ -42,13 +49,23 @@ export const wall = () => {
     onNavigate('/add');
   });
 
+  const deletePost = (id) => dbGlobal.collection('stories').doc(id).delete();
+
   const newPost = document.createElement('div');
   const setupPosts = (data) => {
     if (data.length) {
       let html = '';
       data.forEach((doc) => {
         const post = doc.data();
+        post.id = doc.id;
         // console.log(post);
+        const htmlOfbtnEdit = `<a class='a-edit' data-id='${doc.id}'>
+                              <img class='edit' src='./images/edit.png' alt='edit'>
+                              </a>`;
+        const htmlOfbtndelete = `<a class='a-delete btn-delete'>
+        <img class='delete'data-id=${post.id} src='./images/delete.png' alt='delete'>
+     </a>`;
+
         const templatePost = `
           <section id="container-post">
             <div class="data-user">
@@ -66,19 +83,34 @@ export const wall = () => {
                 <img class= 'dislike' src='./images/dislike.png' alt='like'>
               </a>
               <span id="${`${doc.id}-likes`}" class='score'>${post.likes.length}</span>
-              <span>Me asusta</span>
-              <a href='#' class='a-edit'>
-                <img class='edit' src='./images/edit.png' alt='edit'>
-              </a>
-              <a href='#' class='a-delete'>
-                <img class='delete' src='./images/delete.png' alt='delete'>
-             </a>
+              <span id="meAsusta">Me asusta</span>
+              ${(post.email === crtUser.email) ? htmlOfbtnEdit : ''}
+              ${(post.email === crtUser.email) ? htmlOfbtndelete : ''}
+
             </div>
           </section>
           `;
-        // console.log();
+
         html += templatePost;
         newPost.innerHTML = html;
+      });
+      const btnsEdit = newPost.querySelectorAll('.a-edit');
+      btnsEdit.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          idPostToEdit = e.currentTarget.dataset.id;
+          onNavigate('/edit');
+        });
+      });
+      const btnsDelete = newPost.querySelectorAll('.btn-delete');
+      btnsDelete.forEach((btn) => {
+        btn.addEventListener('click', async (e) => {
+          const result = window.confirm('¿Estás seguro de querer eliminar el post?');
+          if (result === true) {
+            await deletePost(e.target.dataset.id);
+            onNavigate('/wall');
+          }
+        });
       });
     } else {
       newPost.innerHTML = '';
@@ -94,17 +126,19 @@ export const wall = () => {
     });
   };
 
+
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
-      console.log(` Name: ${user.displayName}`);
-      console.log(` email: ${user.email}`);
+    // console.log(` Name: ${user.displayName}`);
+    // console.log(` email: ${user.email}`);
+    // userEmail = user.email;
       dbGlobal.collection('stories')
         .get()
         .then((snapshot) => {
           setupPosts(snapshot.docs);
         });
     } else {
-      console.log('signout');
+    // console.log('signout');
       setupPosts([]);
     }
   });

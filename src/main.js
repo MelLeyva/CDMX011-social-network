@@ -5,6 +5,7 @@ import { logIn } from './components/logIn.js';
 import { signUp } from './components/signUp.js';
 import { wall } from './components/wall.js';
 import { CreatePost } from './components/post/CreatePost.js';
+import { editPost } from './components/post/editPost.js';
 
 export const routes = {
   '/': home,
@@ -12,6 +13,7 @@ export const routes = {
   '/signUp': signUp,
   '/wall': wall,
   '/add': CreatePost,
+  '/edit': editPost,
 };
 export const onNavigate = (pathname) => {
   const rootDiv = document.getElementById('root');
