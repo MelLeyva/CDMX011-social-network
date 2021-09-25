@@ -2,7 +2,7 @@
 import { logOutUser } from '../lib/utils.js';
 import { onNavigate } from '../main.js';
 import { updatebuttons } from './post/eLikes.js';
-import { prueba, dbGlobal } from '../lib/dataPost.js';
+import { prueba, dbGlobal } from '../lib/auth.js';
 
 const userId = () => firebase.auth().currentUser;
 let idPostToEdit = '';
@@ -121,8 +121,7 @@ export const wall = () => {
     }
     container.appendChild(newPost);
     const div = document.querySelectorAll('.btn-post');
-    // eslint-disable-next-line max-len
-    // Creamos un listener para cada botón, y ordenamos que cambie la clase cuando se le da clic al botón
+    // Creamos un listener para cada botón, hace que la clase cambie cuando se le da clic al botón
     div.forEach((divbtn) => {
       updatebuttons(divbtn);
     });

@@ -1,6 +1,4 @@
 // eslint-disable-next-line import/no-cycle
-// eslint-disable-next-line import/no-cycle
-// eslint-disable-next-line import/no-cycle
 import { validateEmail, validatePassword } from './validations.js';
 
 export const fireBaseSignUp = (email, password) => {

@@ -150,20 +150,12 @@ nav {
   margin-top: 15px;
 }
 
-nav ul {
-  list-style: none;
-}
-
-nav li a {
+#home {
   color: rgb(241, 241, 241);
   text-decoration: none;
-}
-
-nav li a i {
   font-size: 30px;
 }
 
-/* LOG IN  */
 .title_login {
   text-align: center;
   margin: 70px auto;
@@ -367,7 +359,7 @@ nav li a i {
 }
 
 #signUpNav li a i {
-  font-size: 40px;
+  font-size: 30px;
 }
 
 #signUpForm {

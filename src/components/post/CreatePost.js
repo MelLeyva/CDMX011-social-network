@@ -1,6 +1,4 @@
 // eslint-disable-next-line import/no-cycle
-import { onNavigate } from '../../main.js';
-
 const dbGlobal = firebase.firestore();
 let usuario = '';
 const userId = () => firebase.auth().currentUser;
@@ -20,7 +18,7 @@ const toPost = (title, history, email) => {
   });
 };
 
-export const CreatePost = () => {
+export const CreatePost = (onNavigate) => {
   const divCreatePost = document.createElement('div');
   const crtUser = userId();
 
