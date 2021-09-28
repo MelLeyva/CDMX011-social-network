@@ -1,6 +1,6 @@
 /* eslint-disable import/no-cycle */
-import { fireBaseSignUp } from '../lib/signUpFb.js';
 import { onNavigate } from '../main.js';
+import { fireBaseSignUp } from '../lib/firebaseAuth.js';
 import { validateEmail, validatePassword } from '../lib/validations.js';
 
 export const signUp = () => {

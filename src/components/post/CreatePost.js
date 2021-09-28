@@ -1,7 +1,13 @@
 // eslint-disable-next-line import/no-cycle
-const dbGlobal = firebase.firestore();
+import { onNavigate } from '../../main.js';
+import { dbGlobal, userId } from '../../lib/firestore.js';
+
 let usuario = '';
-const userId = () => firebase.auth().currentUser;
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    usuario = user;
+  }
+});
 
 const toPost = (title, history, email) => {
   const saveUser = userId();
@@ -18,7 +24,7 @@ const toPost = (title, history, email) => {
   });
 };
 
-export const CreatePost = (onNavigate) => {
+export const CreatePost = () => {
   const divCreatePost = document.createElement('div');
   const crtUser = userId();
 
@@ -60,12 +66,6 @@ export const CreatePost = (onNavigate) => {
       postForm.reset();
       title.focus();
       onNavigate('/wall');
-    }
-  });
-
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      usuario = user;
     }
   });
 

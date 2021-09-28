@@ -398,7 +398,7 @@ nav {
   color: white;
   font-size: 20px;
 }
-.submit {
+#submitSignUp {
   display: block;
   width: 45%;
   height: 10%;
@@ -546,10 +546,13 @@ Wall/*=========*/
   font-family: "Gothic A1", sans-serif;
   color: aliceblue;
 }
-.btn-post {
+.buttons {
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+.btn-post {
+  display: contents;
 }
 .a-like img {
   display: flex;

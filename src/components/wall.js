@@ -1,20 +1,18 @@
 /* eslint-disable import/no-cycle */
-import { logOutUser } from '../lib/utils.js';
+import { logOutUser } from '../lib/firebaseAuth.js';
+import { updateButtons } from './post/eLikes.js';
 import { onNavigate } from '../main.js';
-import { updatebuttons } from './post/eLikes.js';
-import { prueba, dbGlobal } from '../lib/auth.js';
+import { prueba, userId, deletePost } from '../lib/firestore.js';
 
-const userId = () => firebase.auth().currentUser;
 let idPostToEdit = '';
-
 export const getIdPostToEdit = () => idPostToEdit;
+
 export const wall = () => {
   document.body.style.backgroundImage = 'url(../images/post-background.jpg';
   const wallBody = document.querySelector('body');
   wallBody.classList.add('wall-body');
   const container = document.createElement('div');
   const crtUser = userId();
-  console.log(crtUser.email);
   const header = `
   <header id='headerWall'>
     <nav class='navigation'>
@@ -34,7 +32,7 @@ export const wall = () => {
       <p> 'Comparte tu historia' </p>
     </button>
   </section>
-`;
+  `;
 
   container.innerHTML = header;
 
@@ -42,14 +40,12 @@ export const wall = () => {
     e.preventDefault();
     const logOut = window.confirm('Descansa...si es que puedes');
     if (logOut === true) {
-      logOutUser();
+      logOutUser(onNavigate);
     }
   });
   container.querySelector('.modalPost').addEventListener('click', () => {
     onNavigate('/add');
   });
-
-  const deletePost = (id) => dbGlobal.collection('stories').doc(id).delete();
 
   const newPost = document.createElement('div');
   const setupPosts = (data) => {
@@ -79,19 +75,20 @@ export const wall = () => {
               <h3 class="data-title">${post.title}</h3>
               <div class="data-history">${post.history}</div>
             </div>
-            <div class="btn-post">
-            <div id="${post.id}" class="btn-post">
-              ${post.likes.includes(crtUser.uid) ? unLikeBtn : likeBtn}
-            <a class='a-like' hidden >
-              <img class= 'like' src='./images/like.png' alt='like'>
-            </a>
-            <a class='a-disLike' hidden>
+            <div class="buttons">
+              <div id="${post.id}" class="btn-post">
+                ${post.likes.includes(crtUser.uid) ? unLikeBtn : likeBtn}
+              <a class='a-like'hidden>
+                <img class= 'like' src='./images/like.png' alt='like'>
+              </a>
+              <a class='a-disLike' hidden>
               <img class= 'dislike' src='./images/disLike.png' alt='like'>
-            </a>
-            <span id="${doc.id}" class='score'>${post.likes.length}</span>
-            <span class="meAsusta">Me asusta</span>
-              ${post.email === crtUser.email ? htmlOfbtnEdit : ''}
-              ${post.email === crtUser.email ? htmlOfbtndelete : ''}
+              </a>
+              <span id="${doc.id}" class='score'>${post.likes.length}</span>
+              <span class="meAsusta">Me asusta</span>
+              </div>
+                ${post.email === crtUser.email ? htmlOfbtnEdit : ''}
+                ${post.email === crtUser.email ? htmlOfbtndelete : ''}
             </div>
           </section>
           `;
@@ -106,6 +103,7 @@ export const wall = () => {
           onNavigate('/edit');
         });
       });
+
       const btnsDelete = newPost.querySelectorAll('.a-delete');
       btnsDelete.forEach((btn) => {
         btn.addEventListener('click', async (e) => {
@@ -116,16 +114,17 @@ export const wall = () => {
           }
         });
       });
+
+      const btnsLike = newPost.querySelectorAll('.btn-post');
+      btnsLike.forEach((btn) => {
+        updateButtons(btn);
+      });
     } else {
       newPost.innerHTML = '';
     }
     container.appendChild(newPost);
-    const div = document.querySelectorAll('.btn-post');
-    // Creamos un listener para cada botón, hace que la clase cambie cuando se le da clic al botón
-    div.forEach((divbtn) => {
-      updatebuttons(divbtn);
-    });
   };
+
   prueba(setupPosts);
 
   return container;

@@ -1,5 +1,5 @@
 /* eslint-disable import/no-cycle */
-import { logInWhitGoogle, githubSignin, loginWithEmail } from '../lib/logInFb.js';
+import { logInWhitGoogle, githubSignin, loginWithEmail } from '../lib/firebaseAuth.js';
 import { validateEmail } from '../lib/validations.js';
 import { onNavigate } from '../main.js';
 
@@ -73,7 +73,6 @@ export const logIn = () => {
     e.preventDefault();
     githubSignin(onNavigate);
   });
-
 
   return divLogIn;
 };

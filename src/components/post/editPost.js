@@ -1,16 +1,11 @@
+/* eslint-disable no-console */
 /* eslint-disable import/no-cycle */
 import { onNavigate } from '../../main.js';
 import { getIdPostToEdit } from '../wall.js';
+import { userId, getPost, updatePost } from '../../lib/firestore.js';
 
-const dbGlobal = firebase.firestore();
 let idPost = '';
 let divEditPost = '';
-const userId = () => firebase.auth().currentUser;
-// funcion para traer el post para ser editado
-const getPost = (id) => dbGlobal.collection('stories').doc(id).get();
-
-// funcion para actualizar una tarea
-const updatePost = (id, updateObject) => dbGlobal.collection('stories').doc(id).update(updateObject);
 
 // metodo para ir a traer la informacion que correspond a ese id que tenemos
 const loadData = async () => {
@@ -22,15 +17,12 @@ const loadData = async () => {
   postForm.title.value = post.title;
   postForm.history.value = post.history;
 };
-
 // metodo para actualizar los registros
 const updateData = async () => {
   const postForm = document.getElementById('postForm');
   const title = postForm.title.value;
   const history = postForm.history.value;
-
   // agregar la constante del user
-
   if (title.value === '' || history.value === '') {
     divEditPost.querySelector('.emptyPost').innerHTML = 'Todos los campos son obligatorios';
   } else {
